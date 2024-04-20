@@ -86,8 +86,6 @@ for f in args.file:
                 case "UPDATE":
                     handleUpdate(query, rows_affected, rows_returned)
                 case "SELECT":
-                    if rows_affected > 0:
-                        print(line)
                     handleSelect(query, rows_affected, rows_returned)
                 case "DELETE":
                     handleDelete(query, rows_affected, rows_returned)
