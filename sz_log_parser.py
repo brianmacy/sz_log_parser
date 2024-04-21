@@ -67,10 +67,12 @@ parser.add_argument('file', type=argparse.FileType('r'), nargs='+')
 parser.add_argument('-t', '--debugTrace', dest='debugTrace', action='store_true', default=False, help='output debug trace information')
 args = parser.parse_args()
 
-reQuery = "QUERY\[([^\]]+)\]\s*BINDVALS\[[^\]]+\]\s*ROWSAFFECTED\[(\d+)\]\s*ROWSRETURNED\[(\d+)\]\s*TIME\[\d+us\]\s*EXCEPTION\[(\S+)\]"
+reQuery = "QUERY\[(.+)\]\s*BINDVALS\[.+\]\s*ROWSAFFECTED\[(\d+)\]\s*ROWSRETURNED\[(\d+)\]\s*TIME\[\d+us\]\s*EXCEPTION\[(\S+)\]"
 reType = "(\S+)";
 for f in args.file:
     for line in f:
+        if "QUERY[" not in line:
+            continue
         m = re.search(reQuery,line)
         if (m):
             #print(m.groups())
