@@ -3,7 +3,6 @@
 import argparse
 import re
 import json
-from collections import defaultdict
 
 class mydict(dict):
     def __missing__(self, key):
@@ -13,15 +12,15 @@ class mydict(dict):
 stats = mydict()
 
 def handleCall(sql_type, table, rows_affected, rows_returned):
-    if not 'cnt' in stats[table][sql_type]:
+    if 'cnt' not in stats[table][sql_type]:
         stats[table][sql_type]['cnt'] = 1
     else:
         stats[table][sql_type]['cnt'] += 1
-    if not 'rows_affected' in stats[table][sql_type]:
+    if 'rows_affected' not in stats[table][sql_type]:
         stats[table][sql_type]['rows_affected'] = int(rows_affected)
     else:
         stats[table][sql_type]['rows_affected'] += int(rows_affected)
-    if not 'rows_returned' in stats[table][sql_type]:
+    if 'rows_returned' not in stats[table][sql_type]:
         stats[table][sql_type]['rows_returned'] = int(rows_returned)
     else:
         stats[table][sql_type]['rows_returned'] += int(rows_returned)
@@ -68,7 +67,7 @@ parser.add_argument('-t', '--debugTrace', dest='debugTrace', action='store_true'
 args = parser.parse_args()
 
 reQuery = "QUERY\[(.+)\]\s*BINDVALS\[.+\]\s*ROWSAFFECTED\[(\d+)\]\s*ROWSRETURNED\[(\d+)\]\s*TIME\[\d+us\]\s*EXCEPTION\[(\S+)\]"
-reType = "(\S+)";
+reType = "(\S+)"
 for f in args.file:
     for line in f:
         if "QUERY[" not in line:
