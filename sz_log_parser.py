@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 
 import argparse
-import re
 import json
+import re
+
 
 class mydict(dict):
     def __missing__(self, key):
@@ -30,7 +31,7 @@ def handleCall(sql_type, table, rows_affected, rows_returned):
 
 
 def handleInsert(query, rows_affected, rows_returned):
-    reInsert = "INSERT\s*INTO\s*(\w+)"
+    reInsert = r"INSERT\s*INTO\s*(\w+)"
     m = re.search(reInsert, query)
     if not m:
         print(f'Failed Parse: [{query}]')
@@ -38,7 +39,7 @@ def handleInsert(query, rows_affected, rows_returned):
         handleCall("INSERT",m.group(1), rows_affected, rows_returned)
 
 def handleUpdate(query, rows_affected, rows_returned):
-    reUpdate = "UPDATE\s*(\S+)"
+    reUpdate = r"UPDATE\s*(\S+)"
     m = re.search(reUpdate, query)
     if not m:
         print(f'Failed Parse: [{query}]')
@@ -46,7 +47,7 @@ def handleUpdate(query, rows_affected, rows_returned):
         handleCall("UPDATE",m.group(1), rows_affected, rows_returned)
 
 def handleSelect(query, rows_affected, rows_returned):
-    reSelect = "SELECT[\s\S]+FROM\s*(\S+)"
+    reSelect = r"SELECT[\s\S]+FROM\s*(\S+)"
     m = re.search(reSelect, query)
     if not m:
         print(f'Failed Parse: [{query}]')
@@ -54,7 +55,7 @@ def handleSelect(query, rows_affected, rows_returned):
         handleCall("SELECT",m.group(1), rows_affected, rows_returned)
 
 def handleDelete(query, rows_affected, rows_returned):
-    reDelete = "DELETE\s*FROM\s*(\S+)"
+    reDelete = r"DELETE\s*FROM\s*(\S+)"
     m = re.search(reDelete, query)
     if not m:
         print(f'Failed Parse: [{query}]')
@@ -66,8 +67,8 @@ parser.add_argument('file', type=argparse.FileType('r'), nargs='+')
 parser.add_argument('-t', '--debugTrace', dest='debugTrace', action='store_true', default=False, help='output debug trace information')
 args = parser.parse_args()
 
-reQuery = "QUERY\[(.+)\]\s*BINDVALS\[.+\]\s*ROWSAFFECTED\[(\d+)\]\s*ROWSRETURNED\[(\d+)\]\s*TIME\[\d+us\]\s*EXCEPTION\[(\S+)\]"
-reType = "(\S+)"
+reQuery = r"QUERY\[(.+)\]\s*BINDVALS\[.+\]\s*ROWSAFFECTED\[(\d+)\]\s*ROWSRETURNED\[(\d+)\]\s*TIME\[\d+us\]\s*EXCEPTION\[(\S+)\]"
+reType = r"(\S+)"
 for f in args.file:
     for line in f:
         if "QUERY[" not in line:
